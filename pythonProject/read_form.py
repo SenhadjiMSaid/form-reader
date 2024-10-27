@@ -4,15 +4,12 @@ from datetime import datetime
 import os
 
 
-# Replace with your Google Apps Script URL
 url = 'https://script.google.com/macros/s/AKfycbxy-Yv8_COGVOguz1cqqdt_0TxYlD6hJT_sSfzvWaLZ1nySS69-QjcNzDTAAw3b9gWW/exec'
 
 
 def download_image_from_drive(drive_url, save_dir="Athlètes", filename="test.jpg"):
-  # Ensure the save directory exists
   os.makedirs(save_dir, exist_ok=True)
 
-  # Convert Google Drive link to direct download link
   if "open?id=" in drive_url:
     file_id = drive_url.split("open?id=")[-1]
   elif "file/d/" in drive_url:
@@ -24,11 +21,9 @@ def download_image_from_drive(drive_url, save_dir="Athlètes", filename="test.jp
   download_url = f"https://drive.google.com/uc?export=download&id={file_id}"
 
   try:
-    # Download the image
     response = requests.get(download_url, stream=True)
     response.raise_for_status()  # Raise an error for unsuccessful responses
 
-    # Save the image file
     file_path = os.path.join(save_dir, filename)
     with open(file_path, "wb") as file:
       file.write(response.content)
@@ -50,11 +45,9 @@ try:
   response = requests.get(url)
   response.raise_for_status()  # Check for request errors
 
-  # Parse JSON data
   data = response.json()
 
   data_in_json = []
-  # Print data or process it as needed
   print("Google Sheets Data:")
   for row in data:
     print(row)
