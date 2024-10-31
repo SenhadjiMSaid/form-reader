@@ -6,6 +6,9 @@ from reportlab.lib.utils import ImageReader
 from reportlab.lib import colors
 import os
 
+from pythonProject.read_form import file_name
+
+
 def read_data_from_json(file_path):
   with open(file_path, "r", encoding="utf-8") as file:
     return json.load(file)
@@ -112,54 +115,33 @@ def generate_athlete_info_pdf(data, filename="filled_athlete_info.pdf"):
   c.setLineWidth(1)  # Set the line thickness
   c.line(100, y_position, width - 50, y_position)
 
-  # Parental information
-  y_position -= 20
-  c.setFont("Helvetica-Bold", 12)
-  c.drawString(100, y_position, f"Nom et Prénom du père: ")
-  c.setFont("Helvetica", 12)
-  c.drawString(245, y_position, f"{data.get('full_name_pere', '')}")
-  y_position -= 20
-  c.setFont("Helvetica-Bold", 12)
-  c.drawString(100, y_position, f"Profession du père: ")
-  c.setFont("Helvetica", 12)
-  c.drawString(219, y_position, f"{data.get('pere_job', '')}")
-
-  y_position -= 20
-  c.setFont("Helvetica-Bold", 12)
-  c.drawString(100, y_position, f"Nom et Prénom du mère: ")
-  c.setFont("Helvetica", 12)
-  c.drawString(245, y_position, f"{data.get('full_name_mere', '')}")
-  y_position -= 20
-  c.setFont("Helvetica-Bold", 12)
-  c.drawString(100, y_position, f"Profession du mère: ")
-  c.setFont("Helvetica", 12)
-  c.drawString(219, y_position, f"{data.get('mere_job', '')}")
-
-  y_position -= 20
-  c.setStrokeColor(colors.black)
-  c.setLineWidth(1)  # Set the line thickness
-  c.line(100, y_position, width - 50, y_position)
-
   # ID details
   y_position -= 20
   c.setFont("Helvetica-Bold", 12)
   c.drawString(100, y_position, f"N° CNI: ")
   c.setFont("Helvetica", 12)
   c.drawString(216, y_position, f"{data.get('num_CNI', '')}")
+  y_position -= 20
   c.setFont("Helvetica-Bold", 12)
-  c.drawString(325, y_position, f"Délivrée le: ")
+  c.drawString(100, y_position, f"Délivrée le: ")
   c.setFont("Helvetica", 12)
-  c.drawString(400, y_position, f"{data.get('CNI_delivered', '')}")
+  c.drawString(220, y_position, f"{data.get('CNI_delivered', '')}")
+  y_position -= 20
+  c.setFont("Helvetica-Bold", 12)
+  c.drawString(100, y_position, f"Expirée le: ")
+  c.setFont("Helvetica", 12)
+  c.drawString(220, y_position, f"{data.get('CNI_expired', '')}")
 
   y_position -= 20
   c.setFont("Helvetica-Bold", 12)
   c.drawString(100, y_position, f"N° Passeport: ")
   c.setFont("Helvetica", 12)
   c.drawString(216, y_position, f"{data.get('num_passport', '')}")
+  y_position -= 20
   c.setFont("Helvetica-Bold", 12)
-  c.drawString(325, y_position, f"Délivrée le: ")
+  c.drawString(100, y_position, f"Délivrée le: ")
   c.setFont("Helvetica", 12)
-  c.drawString(400, y_position, f"{data.get('passport_delivered', '')}")
+  c.drawString(220, y_position, f"{data.get('passport_delivered', '')}")
 
   y_position -= 20
   c.setStrokeColor(colors.black)
@@ -201,8 +183,9 @@ def generate_athlete_info_pdf(data, filename="filled_athlete_info.pdf"):
 
 data = read_data_from_json('sheet_data.json')
 for athlete in data:
-  print(f"{athlete['family_name']}_{athlete['first_name']}")
+  print(f"{athlete['family_name'].replace(' ', '_')}_{athlete['first_name'].replace(' ', '_')}")
+  file_name = f"{athlete['family_name'].replace(' ', '_')}_{athlete['first_name'].replace(' ', '_')}"
   print(athlete)
-  generate_athlete_info_pdf(athlete, filename=f"Athlètes/{athlete['family_name']}_{athlete['first_name']}/{athlete['family_name']}_{athlete['first_name']}.pdf")
+  generate_athlete_info_pdf(athlete, filename=f"Athlètes/{file_name}/{file_name}.pdf")
 
 

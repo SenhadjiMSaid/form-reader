@@ -58,11 +58,27 @@ try:
   print("Google Sheets Data:")
   for row in data:
     print(row)
-    destination = f"Athlètes/{row["Nom "]}_{row["Prénom "]}"
+    file_name = f"{row["Nom "].replace(" ", "_")}_{row["Prénom "].replace(" ", "_")}"
+    destination = f"Athlètes/{file_name}"
     os.makedirs(destination, exist_ok=True)
-    drive_url = row["Photo "]
-    downloaded_image_path = download_image_from_drive(drive_url, save_dir=destination,
-                                                      filename=f"{row["Nom "]}_{row["Prénom "]}_photo.jpg")
+    photo_url = row["Photo "]
+    downloaded_image_path = download_image_from_drive(photo_url,
+                                                      save_dir=destination,
+                                                      filename=f"{file_name}_photo.jpg"
+                                                      ) if photo_url else ""
+
+    uploaded_cni_url = row["Télécharger la carte CNI"]
+    downloaded_CNI_path = download_image_from_drive(uploaded_cni_url,
+                                                    save_dir=destination,
+                                                    filename=f"{file_name}_CNI.jpg"
+                                                    ) if uploaded_cni_url else ""
+
+    uploaded_passport_url = row["télécharger le Passeport"]
+    downloaded_passport_path = download_image_from_drive(uploaded_passport_url,
+                                                    save_dir=destination,
+                                                    filename=f"{file_name}_Passeport.jpg"
+                                                    ) if uploaded_passport_url else ""
+
 
     dic = {
       "photo": downloaded_image_path,
@@ -83,11 +99,14 @@ try:
       "mere_job": row["Profession de la mère  "],
       "num_CNI": row["N° CNI  "],
       "CNI_delivered": convert_date_format(row["CNI Délivrée le   "]),
+      "CNI_expired": convert_date_format(row["CNI Expirée le "]),
       "num_passport": row["N° Passeport"],
       "passport_delivered": convert_date_format(row["Passeport Délivrée le"]),
       "discipline": row["Discipline  "],
       "taille": row["Taille  "],
-      "pointure": row["Pointure  "]
+      "pointure": row["Pointure  "],
+      "cni_cart": downloaded_CNI_path,
+      "passport": downloaded_passport_path
     }
 
     data_in_json.append(dic)
